@@ -1,0 +1,10 @@
+#XbeeBase code is run at the base station. It receives arrivaltime packet from other stations. This code generates two file i) Arrivaltimefile ii) stationfile.
+#Arrivaltimefile contains info about p wave s wave amplitude etc. stationfile contains info about the station that detected an event and sent to base station. Along with station name its coordinates are also recorded. This information is later used for event location.
+
+#XbeeBase code is also designed to interact with GUI. This code establishes a TCP socket connection with a server on port 20000. Once the client(BBB) server(GUI) is established the arrivaltime and other information recieved at the base station can be visualized in GUI.
+ 
+#compile
+make -f Makefile.linux
+
+#run
+sudo ./xbeebase /dev/ttyUSB0 arrivetimefile stationfile

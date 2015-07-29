@@ -1,0 +1,35 @@
+ARR_TIME       = ../ArrivalTime
+
+INCLUDES        = $(SYSTEM_INCLUDES) -I./include/ -I. -I$(ARR_TIME)/
+LDFLAGS         = $(SYSTEM_LDFLAGS)
+LIBS            = $(SYSTEM_LIBS)
+CFLAGS          = -O $(SYSTEM_CFLAGS) $(SYSTEM_HAVES) $(INCLUDES)
+
+PICKING_TEST = 1
+ifdef PICKING_TEST
+	CFLAGS += -DPICKING_TEST
+endif
+
+TARGETS = xbeecomm 
+
+SRC_DIR = ./src
+OBJ_DIR = ./obj
+
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)  
+OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS)) 
+
+all: $(TARGETS)
+
+$(TARGETS): $(OBJS)
+	$(CC) -o $@ $(filter %.o, $^) $(LDFLAGS) $(LIBS)
+
+$(OBJ_DIR)/%.o:$(OBJ_DIR) $(SRC_DIR)/%.cpp
+	$(CC) $(CFLAGS) -o $@ -c $(filter %.cpp, $^)
+
+# clean
+clean_objs :
+	rm -rf ./obj/*
+
+clean: 
+	rm -f $(TARGETS)
+	rm -rf ./obj/*

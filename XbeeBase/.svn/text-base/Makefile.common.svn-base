@@ -1,0 +1,37 @@
+ARR_TIME       = ../ArrivalTime
+XBEE_COMM      = ../XbeeComm
+
+XBEE_OBJECTS   = $(XBEE_COMM)/obj/xbee.o
+INCLUDES        = $(SYSTEM_INCLUDES) -I. -I./include/ -I$(ARR_TIME)/ -I$(XBEE_COMM)/include/ -I/usr/local/include/
+LDFLAGS         = $(SYSTEM_LDFLAGS)
+LIBS            = $(SYSTEM_LIBS) $(XBEE_OBJECTS)
+CFLAGS          = -O $(SYSTEM_CFLAGS) $(SYSTEM_HAVES) $(INCLUDES)
+
+PICKING_TEST = 1
+ifdef PICKING_TEST
+	CFLAGS += -DPICKING_TEST
+endif
+
+TARGETS = xbeebase 
+
+SRC_DIR = ./src
+OBJ_DIR = ./obj
+
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)  
+OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS)) 
+
+all: $(TARGETS)
+
+$(TARGETS): $(OBJS)
+	$(CC) -o $@ $(filter %.o, $^) $(LDFLAGS) $(LIBS)
+
+$(OBJ_DIR)/%.o:$(OBJ_DIR) $(SRC_DIR)/%.cpp
+	$(CC) $(CFLAGS) -o $@ -c $(filter %.cpp, $^)
+
+# clean
+clean_objs :
+	rm -rf ./obj/*
+
+clean: 
+	rm -f $(TARGETS)
+	rm -rf ./obj/*
